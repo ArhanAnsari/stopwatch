@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stopwatch</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&family=Roboto:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body>
+    <div class="stopwatch">
+      <h1>STOPWATCH</h1>
+      <div class="rect">
+        <span class="time" id="display">00:00:00</span>
+      </div>
+
+      <div class="controls">
+        <button class="buttonPlay">
+          <i
+            class="fa-solid fa-play fa-fade fa-2xl"
+            style="color: #ffffff"
+            id="playButton"
+          ></i>
+
+          <i
+            class="fa-solid fa-pause fa-fade fa-2xl"
+            style="color: #ffffff"
+            id="pauseButton"
+          ></i>
+        </button>
+        <button class="buttonReset">
+          <i
+            class="fa-solid fa-rotate fa-2xl"
+            style="color: #ffffff"
+            id="resetButton"
+          ></i>
+        </button>
+      </div>
+    </div>
+    <script>
+      // Convert time to a format of hours, minutes, seconds, and milliseconds
+
+      function timeToString(time) {
+        let diffInHrs = time / 3600000;
+        let hh = Math.floor(diffInHrs);
+
+        let diffInMin = (diffInHrs - hh) * 60;
+        let mm = Math.floor(diffInMin);
+
+        let diffInSec = (diffInMin - mm) * 60;
+        let ss = Math.floor(diffInSec);
+
+        let diffInMs = (diffInSec - ss) * 100;
+        let ms = Math.floor(diffInMs);
+
+        let formattedMM = mm.toString().padStart(2, "0");
+        let formattedSS = ss.toString().padStart(2, "0");
+        let formattedMS = ms.toString().padStart(2, "0");
+
+        return `${formattedMM}:${formattedSS}:${formattedMS}`;
+      }
+
+      // Declare variables to use in our functions below
+
+      let startTime;
+      let elapsedTime = 0;
+      let timerInterval;
+
+      // Create function to modify innerHTML
+
+      function print(txt) {
+        document.getElementById("display").innerHTML = txt;
+      }
+
+      // Create "start", "pause" and "reset" functions
+
+      function start() {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(function printTime() {
+          elapsedTime = Date.now() - startTime;
+          print(timeToString(elapsedTime));
+        }, 10);
+        showButton("PAUSE");
+      }
+
+      function pause() {
+        clearInterval(timerInterval);
+        showButton("PLAY");
+      }
+
+      function reset() {
+        clearInterval(timerInterval);
+        print("00:00:00");
+        elapsedTime = 0;
+        showButton("PLAY");
+      }
+
+      // Create function to display buttons
+
+      function showButton(buttonKey) {
+        const buttonToShow = buttonKey === "PLAY" ? playButton : pauseButton;
+        const buttonToHide = buttonKey === "PLAY" ? pauseButton : playButton;
+        buttonToShow.style.display = "block";
+        buttonToHide.style.display = "none";
+      }
+      // Create event listeners
+
+      let playButton = document.getElementById("playButton");
+      let pauseButton = document.getElementById("pauseButton");
+      let resetButton = document.getElementById("resetButton");
+
+      playButton.addEventListener("click", start);
+      pauseButton.addEventListener("click", pause);
+      resetButton.addEventListener("click",reset);
+    </script>
+  </body>
+</html>
